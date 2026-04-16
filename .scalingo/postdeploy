@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "Déploiement Scalingo terminé."
