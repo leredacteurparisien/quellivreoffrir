@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
-import { Menu, X, BookOpen } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -22,18 +23,15 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <BookOpen
-              size={28}
-              style={{ color: "#c4622d" }}
-              className="group-hover:scale-110 transition-transform"
+          <Link href="/" className="flex items-center group">
+            <Image
+              src="/logo-quellivreoffrir-avec-texte.svg"
+              alt="Quel livre offrir ?"
+              width={100}
+              height={40}
+              priority
+              className="group-hover:opacity-90 transition-opacity"
             />
-            <span
-              className="font-bold text-lg tracking-wide"
-              style={{ fontFamily: "Georgia, serif", color: "#faf8f5" }}
-            >
-              Quel livre offrir&nbsp;?
-            </span>
           </Link>
 
           {/* Navigation desktop */}

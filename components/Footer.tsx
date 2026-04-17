@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -8,14 +8,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Colonne 1 - Marque */}
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <BookOpen size={22} style={{ color: "#c4622d" }} />
-              <span
-                className="font-bold text-base"
-                style={{ fontFamily: "Georgia, serif", color: "#faf8f5" }}
-              >
-                Quel livre offrir ?
-              </span>
+            <div className="mb-3">
+              <Image
+                src="/logo-quellivreoffrir-avec-texte.svg"
+                alt="Quel livre offrir ?"
+                width={120}
+                height={48}
+              />
             </div>
             <p className="text-sm leading-relaxed" style={{ color: "#8aadb5" }}>
               Trouvez le livre parfait à offrir grâce à notre quiz intelligent,
