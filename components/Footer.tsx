@@ -69,6 +69,15 @@ export default function Footer() {
                   Mentions légales
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/politique-de-confidentialite"
+                  className="text-sm hover:text-white transition-colors"
+                  style={{ color: "#8aadb5" }}
+                >
+                  Politique de confidentialité
+                </Link>
+              </li>
             </ul>
             <p className="mt-4 text-xs" style={{ color: "#5a7a82" }}>
               Les liens vers Amazon et la Fnac sont des liens affiliés. En

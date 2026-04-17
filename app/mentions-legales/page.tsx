@@ -25,9 +25,15 @@ export default function MentionsLegalesPage() {
           </h2>
           <p className="leading-relaxed">
             Le site <strong>quellivreoffrir.fr</strong> est édité par :<br />
-            [À compléter : Nom / Raison sociale]<br />
-            [Adresse]<br />
-            [Email de contact]
+            <strong>Alexandre Giraud</strong><br />
+            9 rue des Longs Prés<br />
+            92100 Boulogne-Billancourt, France<br />
+            Email :{" "}
+            <a href="mailto:contact@quellivreoffrir.fr" style={{ color: "#c4622d" }}>
+              contact@quellivreoffrir.fr
+            </a>
+            <br />
+            SIRET : 87832960600049
           </p>
         </section>
 
@@ -41,8 +47,27 @@ export default function MentionsLegalesPage() {
           <p className="leading-relaxed">
             Ce site est hébergé par :<br />
             <strong>Scalingo SAS</strong><br />
-            15 avenue du Rhin, 67100 Strasbourg, France<br />
-            <a href="https://scalingo.com" style={{ color: "#c4622d" }}>scalingo.com</a>
+            13 rue Jacques Peirotes<br />
+            67000 Strasbourg, France<br />
+            <a href="https://scalingo.com" style={{ color: "#c4622d" }}>
+              scalingo.com
+            </a>
+          </p>
+        </section>
+
+        <section>
+          <h2
+            className="text-xl font-bold mb-3"
+            style={{ fontFamily: "Georgia, serif", color: "#1c2b30" }}
+          >
+            Développement
+          </h2>
+          <p className="leading-relaxed">
+            Ce site a été développé avec{" "}
+            <a href="https://nextjs.org" style={{ color: "#c4622d" }}>
+              Next.js
+            </a>
+            , un framework React open source édité par Vercel.
           </p>
         </section>
 
@@ -54,8 +79,9 @@ export default function MentionsLegalesPage() {
             Propriété intellectuelle
           </h2>
           <p className="leading-relaxed">
-            L'ensemble du contenu de ce site (textes, images, logos) est protégé par le droit
-            d'auteur. Toute reproduction, même partielle, est interdite sans autorisation préalable.
+            L&apos;ensemble du contenu de ce site (textes, images, logos) est protégé par le droit
+            d&apos;auteur. Toute reproduction, même partielle, est interdite sans autorisation préalable
+            de l&apos;éditeur.
           </p>
         </section>
 
@@ -67,9 +93,9 @@ export default function MentionsLegalesPage() {
             Liens affiliés
           </h2>
           <p className="leading-relaxed">
-            Ce site participe aux programmes d'affiliation d'Amazon et de la Fnac. À ce titre,
+            Ce site participe aux programmes d&apos;affiliation d&apos;Amazon et de la Fnac. À ce titre,
             certains liens présents sur le site sont des liens affiliés. Si vous cliquez sur ces
-            liens et effectuez un achat, nous percevons une commission sans que cela engendre de
+            liens et effectuez un achat, l&apos;éditeur perçoit une commission sans que cela engendre de
             surcoût pour vous.
           </p>
         </section>
@@ -84,13 +110,17 @@ export default function MentionsLegalesPage() {
           <p className="leading-relaxed">
             Ce site ne collecte pas de données personnelles à des fins commerciales. Les réponses
             au quiz sont utilisées uniquement pour générer des recommandations et ne sont pas
-            conservées. Le formulaire de contact collecte votre nom et email dans le seul but de
-            vous répondre.
+            conservées. Le formulaire de contact collecte votre nom et adresse email dans le seul
+            but de vous répondre.
           </p>
           <p className="mt-3 leading-relaxed">
             Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez
-            d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer
-            ce droit, contactez-nous via le formulaire de contact.
+            d&apos;un droit d&apos;accès, de rectification et de suppression de vos données. Pour exercer
+            ce droit, contactez-nous à{" "}
+            <a href="mailto:contact@quellivreoffrir.fr" style={{ color: "#c4622d" }}>
+              contact@quellivreoffrir.fr
+            </a>
+            .
           </p>
         </section>
 
@@ -102,8 +132,14 @@ export default function MentionsLegalesPage() {
             Cookies
           </h2>
           <p className="leading-relaxed">
-            Ce site utilise uniquement des cookies techniques indispensables à son fonctionnement.
-            Aucun cookie publicitaire ou de pistage n'est utilisé.
+            Ce site utilise des cookies fonctionnels et d&apos;analyse afin d&apos;améliorer votre
+            expérience de navigation. Vous pouvez accepter ou refuser ces cookies via la
+            bannière qui s&apos;affiche lors de votre première visite. Pour en savoir plus, consultez
+            notre{" "}
+            <a href="/politique-de-confidentialite" style={{ color: "#c4622d" }}>
+              politique de confidentialité
+            </a>
+            .
           </p>
         </section>
 
@@ -115,8 +151,8 @@ export default function MentionsLegalesPage() {
             Intelligence artificielle
           </h2>
           <p className="leading-relaxed">
-            Les recommandations de livres sont générées par l'API Claude d'Anthropic. Elles sont
-            fournies à titre indicatif. L'éditeur du site ne saurait être tenu responsable des
+            Les recommandations de livres sont générées par l&apos;API Claude d&apos;Anthropic. Elles sont
+            fournies à titre indicatif. L&apos;éditeur du site ne saurait être tenu responsable des
             recommandations proposées.
           </p>
         </section>

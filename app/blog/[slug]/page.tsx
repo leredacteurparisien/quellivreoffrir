@@ -41,10 +41,23 @@ export async function generateMetadata({
     return {
       title: article.titre,
       description: article.extrait,
+      alternates: {
+        canonical: `https://quellivreoffrir.fr/blog/${slug}`,
+      },
       openGraph: {
+        type: "article",
         title: article.titre,
         description: article.extrait,
+        url: `https://quellivreoffrir.fr/blog/${slug}`,
+        publishedTime: article.date,
+        authors: article.auteur ? [article.auteur] : undefined,
         images: article.image?.asset?.url ? [article.image.asset.url] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: article.titre,
+        description: article.extrait,
+        images: article.image?.asset?.url ? [article.image.asset.url] : undefined,
       },
     };
   } catch {
@@ -92,8 +105,31 @@ export default async function ArticlePage({
 
   if (!article) notFound();
 
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: article.titre,
+    description: article.extrait ?? undefined,
+    datePublished: article.date,
+    url: `https://quellivreoffrir.fr/blog/${slug}`,
+    author: {
+      "@type": "Person",
+      name: article.auteur ?? "Alexandre Giraud",
+    },
+    image: article.image?.asset?.url ?? undefined,
+    publisher: {
+      "@type": "Organization",
+      name: "Quel livre offrir ?",
+      url: "https://quellivreoffrir.fr",
+    },
+  };
+
   return (
     <article className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       {/* Retour */}
       <Link
         href="/blog"

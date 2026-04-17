@@ -8,5 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default function QuizPage() {
-  return <QuizClient />;
+  return (
+    <>
+      <h1 className="sr-only">Quiz – Trouvez le livre idéal à offrir</h1>
+      <QuizClient />
+    </>
+  );
 }

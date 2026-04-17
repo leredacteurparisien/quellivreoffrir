@@ -11,6 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/a-propos`, lastModified: new Date(), priority: 0.5 },
     { url: `${base}/contact`, lastModified: new Date(), priority: 0.5 },
     { url: `${base}/mentions-legales`, lastModified: new Date(), priority: 0.3 },
+    { url: `${base}/politique-de-confidentialite`, lastModified: new Date(), priority: 0.3 },
   ];
 
   let articleRoutes: MetadataRoute.Sitemap = [];

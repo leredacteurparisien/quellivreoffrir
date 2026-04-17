@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import CookieBanner from "@/components/CookieBanner";
 
 export const metadata: Metadata = {
   title: {
@@ -28,6 +29,20 @@ export const metadata: Metadata = {
   },
 };
 
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Quel livre offrir ?",
+  url: "https://quellivreoffrir.fr",
+  description:
+    "Trouvez le livre idéal à offrir grâce à notre quiz personnalisé et nos recommandations par IA.",
+  publisher: {
+    "@type": "Organization",
+    name: "Quel livre offrir ?",
+    url: "https://quellivreoffrir.fr",
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,9 +51,14 @@ export default function RootLayout({
   return (
     <html lang="fr" className="h-full">
       <body className="min-h-full flex flex-col antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <CookieBanner />
       </body>
     </html>
   );
