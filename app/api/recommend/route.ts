@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     const prompt = buildPrompt(profil, reponses);
 
     const message = await client.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: "claude-sonnet-4-5",
       max_tokens: 2000,
       messages: [{ role: "user", content: prompt }],
     });
