@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(node -e \"const Anthropic = require\\('@anthropic-ai/sdk'\\); console.log\\('SDK OK, version:', require\\('./node_modules/@anthropic-ai/sdk/package.json'\\).version\\)\")",
+      "Bash(node -e \"const {GoogleAnalytics} = require\\('@next/third-parties/google'\\); console.log\\(typeof GoogleAnalytics\\)\")"
     ]
   }
 }

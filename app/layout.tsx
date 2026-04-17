@@ -3,11 +3,15 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
+import AnalyticsProvider from "@/components/AnalyticsProvider";
 
 export const metadata: Metadata = {
   title: {
     default: "Quel livre offrir ? | Trouvez le cadeau littéraire idéal",
     template: "%s | Quel livre offrir ?",
+  },
+  verification: {
+    google: "ec74d311150bbb05",
   },
   description:
     "Trouvez le livre parfait à offrir grâce à notre quiz personnalisé. Recommandations adaptées à chaque profil : bébé, enfant, ado ou adulte.",
@@ -59,6 +63,7 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <Footer />
         <CookieBanner />
+        <AnalyticsProvider />
       </body>
     </html>
   );
