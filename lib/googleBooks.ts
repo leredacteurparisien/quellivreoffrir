@@ -8,9 +8,14 @@ export async function fetchBookData(titre: string, auteur: string): Promise<Book
   const query = encodeURIComponent(`intitle:${titre} inauthor:${auteur}`);
   const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=3&fields=items(volumeInfo(title,imageLinks,industryIdentifiers))`;
 
+  console.log(`[googleBooks] Recherche : "${titre}" — "${auteur}"`);
+
   try {
-    const res = await fetch(url, { next: { revalidate: 86400 } });
-    if (!res.ok) return { thumbnail: null, smallThumbnail: null, isbn: null };
+    const res = await fetch(url);
+    if (!res.ok) {
+      console.error(`[googleBooks] Erreur HTTP ${res.status} pour "${titre}"`);
+      return { thumbnail: null, smallThumbnail: null, isbn: null };
+    }
     const data = await res.json();
 
     const items: Array<{
@@ -21,9 +26,11 @@ export async function fetchBookData(titre: string, auteur: string): Promise<Book
       };
     }> = data?.items ?? [];
 
-    if (items.length === 0) return { thumbnail: null, smallThumbnail: null, isbn: null };
+    if (items.length === 0) {
+      console.log(`[googleBooks] Aucun résultat pour "${titre}"`);
+      return { thumbnail: null, smallThumbnail: null, isbn: null };
+    }
 
-    // Prefer the item whose title best matches
     const titreNorm = titre.toLowerCase();
     const best =
       items.find((item) =>
@@ -37,17 +44,20 @@ export async function fetchBookData(titre: string, auteur: string): Promise<Book
       identifiers.find((id) => id.type === "ISBN_10")?.identifier ??
       null;
 
+    const thumbnail = imageLinks?.thumbnail?.replace("http://", "https://") ?? null;
+    console.log(`[googleBooks] "${titre}" → isbn=${isbn ?? "n/a"}, cover=${thumbnail ? "oui" : "non"}`);
+
     return {
-      thumbnail: imageLinks?.thumbnail?.replace("http://", "https://") ?? null,
+      thumbnail,
       smallThumbnail: imageLinks?.smallThumbnail?.replace("http://", "https://") ?? null,
       isbn,
     };
-  } catch {
+  } catch (err) {
+    console.error(`[googleBooks] Exception pour "${titre}" :`, err);
     return { thumbnail: null, smallThumbnail: null, isbn: null };
   }
 }
 
-// Keep legacy export for any existing callers
 export type BookCover = Pick<BookData, "thumbnail" | "smallThumbnail">;
 export async function fetchBookCover(titre: string, auteur: string): Promise<BookCover> {
   const { thumbnail, smallThumbnail } = await fetchBookData(titre, auteur);

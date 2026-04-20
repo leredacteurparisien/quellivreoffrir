@@ -54,9 +54,9 @@ export default function ResultsPage({
               className="relative w-full flex items-center justify-center"
               style={{ height: "200px", backgroundColor: "#f0f4f5" }}
             >
-              {book.couverture ? (
+              {book.coverUrl ? (
                 <Image
-                  src={book.couverture}
+                  src={book.coverUrl}
                   alt={`Couverture de ${book.titre}`}
                   fill
                   className="object-contain p-2"
@@ -119,7 +119,7 @@ export default function ResultsPage({
               {/* Liens affiliés */}
               <div className="flex gap-2 mt-auto">
                 <a
-                  href={book.lienAmazon}
+                  href={book.amazonLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 flex items-center justify-center gap-1 text-sm font-semibold py-2 px-3 rounded-lg transition-colors"

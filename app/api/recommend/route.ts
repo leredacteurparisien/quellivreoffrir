@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { fetchBookData } from "@/lib/googleBooks";
-import { buildFnacLink, buildAmazonLink } from "@/lib/affiliateLinks";
+import { buildAmazonLink } from "@/lib/affiliateLinks";
 
 const apiKey = process.env.ANTHROPIC_API_KEY;
 console.log("[recommend] ANTHROPIC_API_KEY =", apiKey ? `${apiKey.slice(0, 10)}…` : "(vide — vérifier .env.local)");
@@ -13,13 +13,12 @@ export interface BookRecommendation {
   tag: string;
   pourquoi: string;
   prix: string;
-  couverture: string | null;
   isbn: string | null;
-  lienFnac: string;
-  lienAmazon: string;
+  coverUrl: string | null;
+  amazonLink: string;
 }
 
-type BookRaw = Omit<BookRecommendation, "couverture" | "isbn" | "lienFnac" | "lienAmazon">;
+type BookRaw = Omit<BookRecommendation, "isbn" | "coverUrl" | "amazonLink">;
 
 function buildPrompt(profil: string, reponses: Record<string, string>): string {
   const reponsesFormatees = Object.entries(reponses)
@@ -103,16 +102,15 @@ export async function POST(req: NextRequest) {
         const { thumbnail, isbn } = await fetchBookData(book.titre, book.auteur);
         return {
           ...book,
-          couverture: thumbnail,
           isbn,
-          lienFnac: buildFnacLink(book.titre, book.auteur, isbn),
-          lienAmazon: buildAmazonLink(book.titre, book.auteur, isbn),
+          coverUrl: thumbnail,
+          amazonLink: buildAmazonLink(book.titre, book.auteur, isbn),
         } as BookRecommendation;
       })
     );
 
     // Prioritise books with a cover; fallback to all if not enough
-    const withCover = enriched.filter((b) => b.couverture !== null);
+    const withCover = enriched.filter((b) => b.coverUrl !== null);
     const final = (withCover.length >= 5 ? withCover : enriched).slice(0, 5);
 
     return NextResponse.json({ recommandations: final });
