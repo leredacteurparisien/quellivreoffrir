@@ -3,7 +3,9 @@ import Anthropic from "@anthropic-ai/sdk";
 import { fetchBookCover } from "@/lib/googleBooks";
 import { buildFnacLink, buildAmazonLink } from "@/lib/affiliateLinks";
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const apiKey = process.env.ANTHROPIC_API_KEY;
+console.log("[recommend] ANTHROPIC_API_KEY =", apiKey ? `${apiKey.slice(0, 10)}…` : "(vide — vérifier .env.local)");
+const client = new Anthropic({ apiKey });
 
 export interface BookRecommendation {
   titre: string;
@@ -63,7 +65,7 @@ export async function POST(req: NextRequest) {
     const prompt = buildPrompt(profil, reponses);
 
     const message = await client.messages.create({
-      model: "claude-sonnet-4-5",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 2000,
       messages: [{ role: "user", content: prompt }],
     });
