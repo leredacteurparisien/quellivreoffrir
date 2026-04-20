@@ -97,17 +97,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Réponse invalide de l'IA" }, { status: 500 });
     }
 
-    const enriched = await Promise.all(
-      books.map(async (book) => {
-        const { thumbnail, isbn } = await fetchBookData(book.titre, book.auteur);
-        return {
-          ...book,
-          isbn,
-          coverUrl: thumbnail,
-          amazonLink: buildAmazonLink(book.titre, book.auteur, isbn),
-        } as BookRecommendation;
-      })
-    );
+    // Sequential to avoid 503 rate-limiting from Google Books API
+    const enriched: BookRecommendation[] = [];
+    for (const book of books) {
+      const { thumbnail, isbn } = await fetchBookData(book.titre, book.auteur);
+      const amazonLink = buildAmazonLink(book.titre, book.auteur, isbn);
+      console.log(`[recommend] "${book.titre}" → coverUrl=${thumbnail ?? "null"}, amazonLink=${amazonLink}`);
+      enriched.push({ ...book, isbn, coverUrl: thumbnail, amazonLink });
+    }
 
     // Prioritise books with a cover; fallback to all if not enough
     const withCover = enriched.filter((b) => b.coverUrl !== null);

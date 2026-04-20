@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "books.google.com",
-        pathname: "/books/content/**",
+        pathname: "/books/**",
       },
       {
         protocol: "https",
