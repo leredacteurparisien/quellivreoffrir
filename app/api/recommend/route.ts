@@ -18,6 +18,8 @@ export interface BookRecommendation {
   lienAmazon: string;
 }
 
+type BookRaw = Omit<BookRecommendation, "couverture" | "lienFnac" | "lienAmazon">;
+
 function buildPrompt(profil: string, reponses: Record<string, string>): string {
   const reponsesFormatees = Object.entries(reponses)
     .map(([k, v]) => `- ${k}: ${v}`)
@@ -28,26 +30,37 @@ function buildPrompt(profil: string, reponses: Record<string, string>): string {
 Voici ses réponses au quiz :
 ${reponsesFormatees}
 
-En te basant sur ces informations, propose exactement 5 recommandations de livres parfaitement adaptées.
+Propose exactement 5 recommandations de livres parfaitement adaptées.
 
-Réponds UNIQUEMENT avec un objet JSON valide (sans markdown, sans \`\`\`) de cette forme exacte :
-{
-  "recommandations": [
-    {
-      "titre": "Titre exact du livre",
-      "auteur": "Prénom Nom de l'auteur",
-      "tag": "Un mot-clé (ex: Aventure, Émouvant, Drôle, Classique, Incontournable...)",
-      "pourquoi": "2-3 phrases personnalisées expliquant pourquoi ce livre correspond parfaitement au profil décrit",
-      "prix": "Prix indicatif en euros (ex: 8,90 €)"
-    }
-  ]
+IMPORTANT : réponds UNIQUEMENT avec un tableau JSON brut. Pas de markdown, pas de backticks, pas de texte avant ou après. Commence directement par [ et termine par ].
+
+Format attendu :
+[
+  {
+    "titre": "Titre exact du livre",
+    "auteur": "Prénom Nom de l'auteur",
+    "tag": "Un mot-clé (ex: Aventure, Émouvant, Drôle, Classique, Incontournable...)",
+    "pourquoi": "2-3 phrases personnalisées expliquant pourquoi ce livre correspond parfaitement au profil décrit",
+    "prix": "Prix indicatif en euros (ex: 8,90 €)"
+  }
+]
+
+Contraintes :
+- Les livres doivent exister réellement et être disponibles en France
+- Le prix doit être réaliste et dans le budget indiqué
+- L'explication doit être chaleureuse, personnalisée et faire référence aux réponses du quiz
+- Les recommandations doivent être variées (pas que du même genre)`;
 }
 
-Assure-toi que :
-- Les livres existent réellement et sont disponibles en France
-- Le prix est réaliste et dans le budget indiqué
-- L'explication est chaleureuse, personnalisée et fait référence aux réponses du quiz
-- Les recommandations sont variées (pas que du même genre)`;
+function extractJson(raw: string): string {
+  const trimmed = raw.trim();
+  // Strip markdown code fences if present
+  const fenceMatch = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (fenceMatch) return fenceMatch[1].trim();
+  // Extract first [...] block
+  const arrayMatch = trimmed.match(/\[[\s\S]*\]/);
+  if (arrayMatch) return arrayMatch[0];
+  return trimmed;
 }
 
 export async function POST(req: NextRequest) {
@@ -70,18 +83,20 @@ export async function POST(req: NextRequest) {
       messages: [{ role: "user", content: prompt }],
     });
 
-    const text = message.content[0].type === "text" ? message.content[0].text : "";
+    const raw = message.content[0].type === "text" ? message.content[0].text : "";
+    const jsonStr = extractJson(raw);
 
-    let parsed: { recommandations: Omit<BookRecommendation, "couverture" | "lienFnac" | "lienAmazon">[] };
+    let books: BookRaw[];
     try {
-      parsed = JSON.parse(text.trim());
+      books = JSON.parse(jsonStr);
+      if (!Array.isArray(books)) throw new Error("Not an array");
     } catch {
+      console.error("[recommend] Échec du parsing JSON. Texte brut reçu :", raw);
       return NextResponse.json({ error: "Réponse invalide de l'IA" }, { status: 500 });
     }
 
-    // Enrichissement : couvertures + liens affiliés en parallèle
     const enriched = await Promise.all(
-      parsed.recommandations.map(async (book) => {
+      books.map(async (book) => {
         const cover = await fetchBookCover(book.titre, book.auteur);
         return {
           ...book,
