@@ -119,18 +119,6 @@ export default function ResultsPage({
               {/* Liens affiliés */}
               <div className="flex gap-2 mt-auto">
                 <a
-                  href={book.lienFnac}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-1 text-sm font-semibold py-2 px-3 rounded-lg transition-colors"
-                  style={{
-                    backgroundColor: "#ffd700",
-                    color: "#1c2b30",
-                  }}
-                >
-                  Fnac <ExternalLink size={12} />
-                </a>
-                <a
                   href={book.lienAmazon}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -158,7 +146,7 @@ export default function ResultsPage({
           Recommencer le quiz
         </button>
         <p className="mt-3 text-sm" style={{ color: "#9ca3af" }}>
-          * Les liens Amazon et Fnac sont des liens affiliés.
+          * Les liens Amazon sont des liens affiliés.
         </p>
       </div>
     </div>
