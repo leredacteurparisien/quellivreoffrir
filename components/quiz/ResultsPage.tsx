@@ -63,7 +63,21 @@ export default function ResultsPage({
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
               ) : (
-                <div className="text-6xl opacity-30">📖</div>
+                <div className="flex flex-col items-center justify-center gap-2 w-full h-full px-4">
+                  <Image
+                    src="/logo-quellivreoffrir-icone.svg"
+                    alt="Quel livre offrir"
+                    width={48}
+                    height={48}
+                    className="opacity-20"
+                  />
+                  <span
+                    className="text-xs text-center font-medium leading-tight line-clamp-3"
+                    style={{ color: "#2a6b7c", opacity: 0.5 }}
+                  >
+                    {book.titre}
+                  </span>
+                </div>
               )}
               {/* Tag */}
               <span

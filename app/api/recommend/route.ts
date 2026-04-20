@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { fetchBookCover } from "@/lib/googleBooks";
+import { fetchBookData } from "@/lib/googleBooks";
 import { buildFnacLink, buildAmazonLink } from "@/lib/affiliateLinks";
 
 const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -14,11 +14,12 @@ export interface BookRecommendation {
   pourquoi: string;
   prix: string;
   couverture: string | null;
+  isbn: string | null;
   lienFnac: string;
   lienAmazon: string;
 }
 
-type BookRaw = Omit<BookRecommendation, "couverture" | "lienFnac" | "lienAmazon">;
+type BookRaw = Omit<BookRecommendation, "couverture" | "isbn" | "lienFnac" | "lienAmazon">;
 
 function buildPrompt(profil: string, reponses: Record<string, string>): string {
   const reponsesFormatees = Object.entries(reponses)
@@ -97,12 +98,13 @@ export async function POST(req: NextRequest) {
 
     const enriched = await Promise.all(
       books.map(async (book) => {
-        const cover = await fetchBookCover(book.titre, book.auteur);
+        const { thumbnail, isbn } = await fetchBookData(book.titre, book.auteur);
         return {
           ...book,
-          couverture: cover.thumbnail,
-          lienFnac: buildFnacLink(book.titre, book.auteur),
-          lienAmazon: buildAmazonLink(book.titre, book.auteur),
+          couverture: thumbnail,
+          isbn,
+          lienFnac: buildFnacLink(book.titre, book.auteur, isbn),
+          lienAmazon: buildAmazonLink(book.titre, book.auteur, isbn),
         } as BookRecommendation;
       })
     );
