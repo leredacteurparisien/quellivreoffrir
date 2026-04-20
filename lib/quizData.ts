@@ -1,9 +1,17 @@
 export type Profil = "bébé" | "enfant" | "ado" | "adulte";
+export type QuestionType = "single" | "multiple" | "budget";
+
+export interface QuizOption {
+  value: string;
+  label: string;
+  freeText?: boolean;
+}
 
 export interface QuizQuestion {
   id: string;
   question: string;
-  options: { value: string; label: string }[];
+  type?: QuestionType; // defaults to "single"
+  options: QuizOption[];
 }
 
 export const quizQuestions: Record<Profil, QuizQuestion[]> = {
@@ -31,6 +39,7 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
     {
       id: "univers",
       question: "Quel univers lui plaira ?",
+      type: "multiple",
       options: [
         { value: "animaux", label: "🐻 Animaux" },
         { value: "nature", label: "🌿 Nature" },
@@ -39,18 +48,9 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
       ],
     },
     {
-      id: "lien",
-      question: "Quel est votre lien avec le bébé ?",
-      options: [
-        { value: "parent", label: "👨‍👩‍👦 Parent" },
-        { value: "grands-parents", label: "👴👵 Grands-parents" },
-        { value: "ami famille", label: "👫 Ami de la famille" },
-        { value: "autre", label: "🙂 Autre" },
-      ],
-    },
-    {
       id: "type_livre",
       question: "Quel type de livre préférez-vous offrir ?",
+      type: "multiple",
       options: [
         { value: "imagier", label: "📖 Imagier" },
         { value: "album illustré", label: "🖼️ Album illustré" },
@@ -61,12 +61,8 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
     {
       id: "budget",
       question: "Quel est votre budget ?",
-      options: [
-        { value: "moins de 10€", label: "Moins de 10 €" },
-        { value: "10-20€", label: "10 – 20 €" },
-        { value: "20-30€", label: "20 – 30 €" },
-        { value: "plus de 30€", label: "Plus de 30 €" },
-      ],
+      type: "budget",
+      options: [],
     },
   ],
 
@@ -93,12 +89,14 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
     {
       id: "gouts",
       question: "Quels sont ses centres d'intérêt ?",
+      type: "multiple",
       options: [
         { value: "animaux", label: "🐾 Animaux" },
         { value: "aventure", label: "⚔️ Aventure & héros" },
         { value: "humour", label: "😂 Humour" },
         { value: "science", label: "🔬 Sciences & découvertes" },
         { value: "magie", label: "✨ Magie & fantasy" },
+        { value: "autre", label: "🖊️ Autre (précisez)", freeText: true },
       ],
     },
     {
@@ -118,11 +116,13 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
         { value: "famille", label: "👨‍👩‍👧‍👦 Famille (oncle, tante…)" },
         { value: "ami", label: "👫 Ami(e)" },
         { value: "enseignant", label: "🍎 Enseignant(e)" },
+        { value: "autre", label: "🙂 Autre" },
       ],
     },
     {
       id: "type_livre",
       question: "Quel type de livre préférez-vous offrir ?",
+      type: "multiple",
       options: [
         { value: "roman", label: "📚 Roman" },
         { value: "bande dessinée", label: "💬 Bande dessinée" },
@@ -133,12 +133,8 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
     {
       id: "budget",
       question: "Quel est votre budget ?",
-      options: [
-        { value: "moins de 10€", label: "Moins de 10 €" },
-        { value: "10-15€", label: "10 – 15 €" },
-        { value: "15-25€", label: "15 – 25 €" },
-        { value: "plus de 25€", label: "Plus de 25 €" },
-      ],
+      type: "budget",
+      options: [],
     },
   ],
 
@@ -149,19 +145,36 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
       options: [
         { value: "anniversaire", label: "🎂 Anniversaire" },
         { value: "noël", label: "🎄 Noël" },
-        { value: "bac/brevet", label: "🎓 Bac / Brevet" },
+        { value: "brevet", label: "🎓 Brevet" },
+        { value: "bac", label: "🎓 Bac" },
         { value: "autre", label: "🎁 Autre occasion" },
       ],
     },
     {
       id: "gouts_litteraires",
       question: "Quels genres littéraires aime-t-il/elle ?",
+      type: "multiple",
       options: [
         { value: "fantasy", label: "🐉 Fantasy & science-fiction" },
         { value: "thriller", label: "🔪 Thriller & policier" },
         { value: "romance", label: "💕 Romance" },
         { value: "contemporain", label: "🌆 Roman contemporain" },
         { value: "classique", label: "📜 Classiques" },
+        { value: "autre", label: "🖊️ Autre (précisez)", freeText: true },
+      ],
+    },
+    {
+      id: "passions",
+      question: "Quelles sont ses passions ?",
+      type: "multiple",
+      options: [
+        { value: "musique", label: "🎵 Musique" },
+        { value: "jeux vidéo", label: "🎮 Jeux vidéo" },
+        { value: "sport", label: "⚽ Sport" },
+        { value: "cinéma/séries", label: "🎬 Cinéma / séries" },
+        { value: "art/dessin", label: "🎨 Art / dessin" },
+        { value: "développement personnel", label: "🧘 Développement personnel" },
+        { value: "autre", label: "🖊️ Autre (précisez)", freeText: true },
       ],
     },
     {
@@ -174,24 +187,12 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
       ],
     },
     {
-      id: "passions",
-      question: "Quelles sont ses passions ?",
-      options: [
-        { value: "musique", label: "🎵 Musique" },
-        { value: "jeux vidéo", label: "🎮 Jeux vidéo" },
-        { value: "sport", label: "⚽ Sport" },
-        { value: "cinéma/séries", label: "🎬 Cinéma / séries" },
-        { value: "art/dessin", label: "🎨 Art / dessin" },
-        { value: "développement personnel", label: "🧘 Développement personnel" },
-      ],
-    },
-    {
       id: "lecture",
       question: "Quel est son rapport à la lecture ?",
       options: [
         { value: "passionné", label: "📖 Grand lecteur/lectrice" },
         { value: "occasionnel", label: "📚 Lit de temps en temps" },
-        { value: "peu lecteur", label: "🤷 Peu lecteur/lectrice" },
+        { value: "peu lecteur", label: "🤷 Lit occasionnellement" },
       ],
     },
     {
@@ -202,35 +203,25 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
         { value: "famille", label: "👨‍👩‍👧‍👦 Famille" },
         { value: "ami", label: "👫 Ami(e)" },
         { value: "enseignant", label: "🍎 Enseignant(e)" },
+        { value: "autre", label: "🙂 Autre" },
       ],
     },
     {
       id: "budget",
       question: "Quel est votre budget ?",
-      options: [
-        { value: "moins de 10€", label: "Moins de 10 €" },
-        { value: "10-20€", label: "10 – 20 €" },
-        { value: "20-30€", label: "20 – 30 €" },
-        { value: "plus de 30€", label: "Plus de 30 €" },
-      ],
+      type: "budget",
+      options: [],
     },
     {
       id: "type_livre",
       question: "Quel format préférez-vous offrir ?",
+      type: "multiple",
       options: [
         { value: "poche", label: "📗 Poche" },
         { value: "grand format", label: "📘 Grand format" },
         { value: "manga", label: "🇯🇵 Manga" },
         { value: "bande dessinée", label: "💬 BD / Comics" },
-      ],
-    },
-    {
-      id: "langue",
-      question: "Dans quelle langue ?",
-      options: [
-        { value: "français", label: "🇫🇷 Français" },
-        { value: "anglais", label: "🇬🇧 Anglais (pour pratiquer)" },
-        { value: "les deux", label: "🌍 Peu importe" },
+        { value: "beaux livres", label: "🖼️ Beaux livres" },
       ],
     },
   ],
@@ -250,6 +241,7 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
     {
       id: "gouts_litteraires",
       question: "Quels genres littéraires apprécie-t-il/elle ?",
+      type: "multiple",
       options: [
         { value: "littérature française", label: "📜 Littérature française" },
         { value: "roman étranger", label: "🌍 Roman étranger" },
@@ -257,20 +249,14 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
         { value: "fantasy/SF", label: "🚀 Fantasy / Science-fiction" },
         { value: "romance", label: "💕 Romance" },
         { value: "historique", label: "🏰 Roman historique" },
-      ],
-    },
-    {
-      id: "essais",
-      question: "Est-il/elle ouvert(e) aux essais et documentaires ?",
-      options: [
-        { value: "oui", label: "✅ Oui, très ouvert(e)" },
-        { value: "non", label: "❌ Non, préfère la fiction" },
-        { value: "peut-être", label: "🤔 Selon le sujet" },
+        { value: "essais/documentaires", label: "📰 Essais / Documentaires" },
+        { value: "autre", label: "🖊️ Autre (précisez)", freeText: true },
       ],
     },
     {
       id: "passions",
       question: "Quelles sont ses passions ?",
+      type: "multiple",
       options: [
         { value: "histoire", label: "🏛️ Histoire" },
         { value: "philosophie", label: "🤔 Philosophie" },
@@ -280,6 +266,7 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
         { value: "sciences", label: "🔬 Sciences" },
         { value: "psychologie", label: "🧠 Psychologie" },
         { value: "développement personnel", label: "🌱 Développement personnel" },
+        { value: "autre", label: "🖊️ Autre (précisez)", freeText: true },
       ],
     },
     {
@@ -288,7 +275,7 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
       options: [
         { value: "passionné", label: "📖 Grand lecteur/lectrice" },
         { value: "régulier", label: "📚 Lit régulièrement" },
-        { value: "occasionnel", label: "🤷 Lit occasionnellement" },
+        { value: "peu", label: "🤷 Lit peu" },
       ],
     },
     {
@@ -305,30 +292,19 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
     {
       id: "budget",
       question: "Quel est votre budget ?",
-      options: [
-        { value: "moins de 10€", label: "Moins de 10 €" },
-        { value: "10-20€", label: "10 – 20 €" },
-        { value: "20-30€", label: "20 – 30 €" },
-        { value: "plus de 30€", label: "Plus de 30 €" },
-      ],
+      type: "budget",
+      options: [],
     },
     {
       id: "type_livre",
       question: "Quel format préférez-vous offrir ?",
+      type: "multiple",
       options: [
         { value: "poche", label: "📗 Poche" },
         { value: "grand format", label: "📘 Grand format / broché" },
         { value: "beau livre", label: "🖼️ Beau livre / illustré" },
+        { value: "bd", label: "💬 BD" },
         { value: "peu importe", label: "🤷 Peu importe" },
-      ],
-    },
-    {
-      id: "langue",
-      question: "Dans quelle langue ?",
-      options: [
-        { value: "français", label: "🇫🇷 Français" },
-        { value: "anglais", label: "🇬🇧 Anglais" },
-        { value: "les deux", label: "🌍 Peu importe" },
       ],
     },
   ],

@@ -88,6 +88,7 @@ function QuizInner() {
     const question = questions[stepIndex];
     return (
       <QuizStep
+        key={question.id}
         question={question}
         stepIndex={stepIndex}
         totalSteps={questions.length}

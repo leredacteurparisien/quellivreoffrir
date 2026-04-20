@@ -31,7 +31,7 @@ function buildPrompt(profil: string, reponses: Record<string, string>): string {
 Voici ses réponses au quiz :
 ${reponsesFormatees}
 
-Propose exactement 5 recommandations de livres parfaitement adaptées.
+Propose exactement 7 recommandations de livres parfaitement adaptées.
 
 IMPORTANT : réponds UNIQUEMENT avec un tableau JSON brut. Pas de markdown, pas de backticks, pas de texte avant ou après. Commence directement par [ et termine par ].
 
@@ -46,11 +46,13 @@ Format attendu :
   }
 ]
 
-Contraintes :
-- Les livres doivent exister réellement et être disponibles en France
-- Le prix doit être réaliste et dans le budget indiqué
-- L'explication doit être chaleureuse, personnalisée et faire référence aux réponses du quiz
-- Les recommandations doivent être variées (pas que du même genre)`;
+Règles ABSOLUES :
+- Ne recommande QUE des livres réels, publiés et disponibles en France. Vérifie mentalement que chaque livre existe avant de le proposer.
+- Recommande uniquement des livres disponibles en français (traduits si nécessaire).
+- Le prix doit être réaliste et dans le budget indiqué.
+- Pour les sagas, toujours proposer le tome 1 et préciser "Tome 1 d'une saga de X tomes" dans le champ "pourquoi".
+- L'explication doit être chaleureuse, personnalisée et faire référence aux réponses du quiz.
+- Les recommandations doivent être variées (genres différents).`;
 }
 
 function extractJson(raw: string): string {
@@ -109,7 +111,11 @@ export async function POST(req: NextRequest) {
       })
     );
 
-    return NextResponse.json({ recommandations: enriched });
+    // Prioritise books with a cover; fallback to all if not enough
+    const withCover = enriched.filter((b) => b.couverture !== null);
+    const final = (withCover.length >= 5 ? withCover : enriched).slice(0, 5);
+
+    return NextResponse.json({ recommandations: final });
   } catch (error) {
     console.error("Erreur /api/recommend:", error);
     return NextResponse.json(
