@@ -24,7 +24,6 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
         { value: "anniversaire", label: "🎂 Anniversaire" },
         { value: "noël", label: "🎄 Noël" },
         { value: "autre", label: "🎁 Autre occasion" },
-        { value: "autre", label: "🖊️ Autre (précisez)", freeText: true },
       ],
     },
     {
@@ -46,6 +45,7 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
         { value: "nature", label: "🌿 Nature" },
         { value: "couleurs", label: "🎨 Couleurs & formes" },
         { value: "aventure", label: "🚀 Aventure & imaginaire" },
+        { value: "voitures", label: "🚗 Voitures" },
         { value: "autre", label: "🖊️ Autre (précisez)", freeText: true },
       ],
     },
@@ -58,6 +58,8 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
         { value: "album illustré", label: "🖼️ Album illustré" },
         { value: "livre bain", label: "🛁 Livre de bain" },
         { value: "livre tissu", label: "🧸 Livre en tissu" },
+        { value: "livre sonore", label: "🔊 Livre sonore" },
+        { value: "peu importe", label: "🤷 Peu importe" },
       ],
     },
     {
@@ -130,6 +132,7 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
         { value: "bande dessinée", label: "💬 Bande dessinée" },
         { value: "documentaire", label: "🔭 Documentaire" },
         { value: "livre illustré", label: "🎨 Livre illustré" },
+        { value: "peu importe", label: "🤷 Peu importe" },
       ],
     },
     {
@@ -224,6 +227,7 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
         { value: "manga", label: "🇯🇵 Manga" },
         { value: "bande dessinée", label: "💬 BD / Comics" },
         { value: "beaux livres", label: "🖼️ Beaux livres" },
+        { value: "peu importe", label: "🤷 Peu importe" },
       ],
     },
   ],
