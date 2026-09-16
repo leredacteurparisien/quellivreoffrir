@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "covers.openlibrary.org",
+        pathname: "/b/**",
+      },
+      {
+        protocol: "https",
         hostname: "cdn.sanity.io",
       },
     ],
