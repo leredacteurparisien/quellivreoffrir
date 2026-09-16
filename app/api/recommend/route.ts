@@ -99,22 +99,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Réponse invalide de l'IA" }, { status: 500 });
     }
 
-    // Séquentiel + pause pour éviter le rate-limiting (429) de Google Books
+    // Séquentiel + pause pour éviter le rate-limiting des sources
     const enriched: BookRecommendation[] = [];
     for (const book of books) {
       const { thumbnail, isbn } = await fetchBookData(book.titre, book.auteur);
       const amazonLink = buildAmazonLink(book.titre, book.auteur, isbn);
-      console.log(`[recommend] "${book.titre}" → coverUrl=${thumbnail ?? "null"}, amazonLink=${amazonLink}`);
+      console.log(`[recommend] "${book.titre}" → isbn=${isbn ?? "null"}, coverUrl=${thumbnail ?? "null"}`);
       enriched.push({ ...book, isbn, coverUrl: thumbnail, amazonLink });
-      await sleep(300); // 300 ms entre chaque appel
+      await sleep(300);
     }
 
-    // On ne garde que les livres confirmés (couverture OU ISBN trouvés),
-    // pour écarter les titres inventés. Repli sur tous si trop peu de confirmés.
-    const verifies = enriched.filter((b) => b.coverUrl !== null || b.isbn !== null);
-    const final = (verifies.length >= 5 ? verifies : enriched).slice(0, 5);
+    // On ne garde QUE les livres réels (ISBN trouvé = livre existant vérifié).
+    // La couverture est optionnelle : un livre réel sans image est affiché sans visuel.
+    const verifies = enriched.filter((b) => b.isbn !== null);
 
-    return NextResponse.json({ recommandations: final });
+    // Aucun livre vérifié → on l'assume honnêtement, pas de livre inventé.
+    return NextResponse.json({ recommandations: verifies.slice(0, 5) });
   } catch (error) {
     console.error("Erreur /api/recommend:", error);
     return NextResponse.json(
