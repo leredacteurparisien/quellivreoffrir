@@ -46,6 +46,7 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
         { value: "nature", label: "🌿 Nature" },
         { value: "couleurs", label: "🎨 Couleurs & formes" },
         { value: "aventure", label: "🚀 Aventure & imaginaire" },
+        { value: "autre", label: "🖊️ Autre (précisez)", freeText: true },
       ],
     },
     {
