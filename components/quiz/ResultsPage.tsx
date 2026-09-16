@@ -28,7 +28,6 @@ export default function ResultsPage({
   profil: Profil;
   onRestart: () => void;
 }) {
-  // Aucun livre vérifié : on l'assume honnêtement plutôt que d'inventer.
   if (recommandations.length === 0) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-20 text-center">
@@ -40,8 +39,8 @@ export default function ResultsPage({
           Aucun livre trouvé pour cette recherche
         </h1>
         <p className="mb-8" style={{ color: "#6b7280" }}>
-          Nous n'avons pas pu confirmer de livre correspondant précisément à ce
-          profil. Essayez de relancer le quiz en modifiant certains critères
+          Nous n&apos;avons pas pu confirmer de livre correspondant précisément à
+          ce profil. Essayez de relancer le quiz en modifiant certains critères
           (goûts, budget, type de livre).
         </p>
         <button
@@ -57,7 +56,6 @@ export default function ResultsPage({
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
-      {/* En-tête résultats */}
       <div className="text-center mb-12">
         <div className="text-5xl mb-4">🎉</div>
         <h1
@@ -74,11 +72,9 @@ export default function ResultsPage({
         </p>
       </div>
 
-      {/* Grille des recommandations */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         {recommandations.map((book, i) => (
           <div key={i} className="card flex flex-col">
-            {/* Couverture */}
             <div
               className="relative w-full flex items-center justify-center"
               style={{ height: "200px", backgroundColor: "#f0f4f5" }}
@@ -108,14 +104,12 @@ export default function ResultsPage({
                   </span>
                 </div>
               )}
-              {/* Tag */}
               <span
                 className="absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded-full text-white"
                 style={{ backgroundColor: getTagColor(book.tag) }}
               >
                 {book.tag}
               </span>
-              {/* Numéro */}
               <span
                 className="absolute top-3 right-3 w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center text-white"
                 style={{ backgroundColor: "#1c2b30" }}
@@ -124,7 +118,6 @@ export default function ResultsPage({
               </span>
             </div>
 
-            {/* Infos */}
             <div className="p-5 flex-1 flex flex-col">
               <h3
                 className="font-bold text-lg mb-1 leading-tight"
@@ -135,27 +128,20 @@ export default function ResultsPage({
               <p className="text-sm mb-1" style={{ color: "#6b7280" }}>
                 {book.auteur}
               </p>
-              <p
-                className="text-sm font-semibold mb-3"
-                style={{ color: "#c4622d" }}
-              >
+              <p className="text-sm font-semibold mb-3" style={{ color: "#c4622d" }}>
                 {book.prix}
               </p>
               <p className="text-sm leading-relaxed mb-4 flex-1" style={{ color: "#374151" }}>
                 {book.pourquoi}
               </p>
 
-              {/* Liens affiliés */}
               <div className="flex gap-2 mt-auto">
                 
                   href={book.amazonLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 flex items-center justify-center gap-1 text-sm font-semibold py-2 px-3 rounded-lg transition-colors"
-                  style={{
-                    backgroundColor: "#ff9900",
-                    color: "#1c2b30",
-                  }}
+                  style={{ backgroundColor: "#ff9900", color: "#1c2b30" }}
                 >
                   Amazon <ExternalLink size={12} />
                 </a>
@@ -165,7 +151,6 @@ export default function ResultsPage({
         ))}
       </div>
 
-      {/* Recommencer */}
       <div className="text-center">
         <button
           onClick={onRestart}
