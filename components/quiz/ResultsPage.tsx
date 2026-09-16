@@ -136,15 +136,7 @@ export default function ResultsPage({
               </p>
 
               <div className="flex gap-2 mt-auto">
-                
-                  href={book.amazonLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-1 text-sm font-semibold py-2 px-3 rounded-lg transition-colors"
-                  style={{ backgroundColor: "#ff9900", color: "#1c2b30" }}
-                >
-                  Voir sur Amazon
-                </a>
+               <a href={book.amazonLink} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-1 text-sm font-semibold py-2 px-3 rounded-lg transition-colors" style={{backgroundColor:"#ff9900", color:"#1c2b30"}}>voir sur Amazon </a>
               </div>
             </div>
           </div>
