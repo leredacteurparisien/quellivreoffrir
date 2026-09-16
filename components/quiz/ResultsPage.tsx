@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ExternalLink, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import type { BookRecommendation } from "@/app/api/recommend/route";
 import type { Profil } from "@/lib/quizData";
 
@@ -143,7 +143,7 @@ export default function ResultsPage({
                   className="flex-1 flex items-center justify-center gap-1 text-sm font-semibold py-2 px-3 rounded-lg transition-colors"
                   style={{ backgroundColor: "#ff9900", color: "#1c2b30" }}
                 >
-                  Amazon <ExternalLink size={12} />
+                  Voir sur Amazon
                 </a>
               </div>
             </div>
