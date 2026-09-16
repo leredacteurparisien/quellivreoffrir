@@ -28,6 +28,33 @@ export default function ResultsPage({
   profil: Profil;
   onRestart: () => void;
 }) {
+  // Aucun livre vérifié : on l'assume honnêtement plutôt que d'inventer.
+  if (recommandations.length === 0) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-20 text-center">
+        <div className="text-5xl mb-4">🔍</div>
+        <h1
+          className="text-2xl md:text-3xl font-bold mb-3"
+          style={{ fontFamily: "Georgia, serif", color: "#2a6b7c" }}
+        >
+          Aucun livre trouvé pour cette recherche
+        </h1>
+        <p className="mb-8" style={{ color: "#6b7280" }}>
+          Nous n'avons pas pu confirmer de livre correspondant précisément à ce
+          profil. Essayez de relancer le quiz en modifiant certains critères
+          (goûts, budget, type de livre).
+        </p>
+        <button
+          onClick={onRestart}
+          className="btn-secondary flex items-center gap-2 mx-auto"
+        >
+          <RefreshCw size={16} />
+          Recommencer le quiz
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
       {/* En-tête résultats */}
@@ -37,7 +64,9 @@ export default function ResultsPage({
           className="text-3xl md:text-4xl font-bold mb-3"
           style={{ fontFamily: "Georgia, serif", color: "#2a6b7c" }}
         >
-          Vos 5 recommandations personnalisées
+          {recommandations.length > 1
+            ? `Vos ${recommandations.length} recommandations personnalisées`
+            : "Votre recommandation personnalisée"}
         </h1>
         <p style={{ color: "#6b7280" }}>
           Sélectionnées par notre libraire IA pour le profil{" "}
@@ -118,7 +147,7 @@ export default function ResultsPage({
 
               {/* Liens affiliés */}
               <div className="flex gap-2 mt-auto">
-                <a
+                
                   href={book.amazonLink}
                   target="_blank"
                   rel="noopener noreferrer"
