@@ -4,9 +4,12 @@ export interface BookData {
   isbn: string | null;
 }
 
+const GOOGLE_BOOKS_KEY = process.env.GOOGLE_BOOKS_API_KEY ?? "";
+
 export async function fetchBookData(titre: string, auteur: string): Promise<BookData> {
   const query = encodeURIComponent(`intitle:${titre} inauthor:${auteur}`);
-  const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=3&fields=items(volumeInfo(title,imageLinks,industryIdentifiers))`;
+  const keyParam = GOOGLE_BOOKS_KEY ? `&key=${GOOGLE_BOOKS_KEY}` : "";
+  const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=3&country=FR&fields=items(volumeInfo(title,imageLinks,industryIdentifiers))${keyParam}`;
 
   console.log(`[googleBooks] Recherche : "${titre}" — "${auteur}"`);
 
@@ -56,6 +59,11 @@ export async function fetchBookData(titre: string, auteur: string): Promise<Book
     console.error(`[googleBooks] Exception pour "${titre}" :`, err);
     return { thumbnail: null, smallThumbnail: null, isbn: null };
   }
+}
+
+// Petite pause pour espacer les appels et éviter le rate-limiting (429)
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export type BookCover = Pick<BookData, "thumbnail" | "smallThumbnail">;
