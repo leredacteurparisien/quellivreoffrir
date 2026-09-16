@@ -24,6 +24,7 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
         { value: "anniversaire", label: "🎂 Anniversaire" },
         { value: "noël", label: "🎄 Noël" },
         { value: "autre", label: "🎁 Autre occasion" },
+        { value: "autre", label: "🖊️ Autre (précisez)", freeText: true },
       ],
     },
     {
