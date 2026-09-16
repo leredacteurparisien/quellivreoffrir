@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { fetchBookData } from "@/lib/googleBooks";
+import { fetchBookData, sleep } from "@/lib/googleBooks";
 import { buildAmazonLink } from "@/lib/affiliateLinks";
 
 const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -97,18 +97,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Réponse invalide de l'IA" }, { status: 500 });
     }
 
-    // Sequential to avoid 503 rate-limiting from Google Books API
+    // Séquentiel + pause pour éviter le rate-limiting (429) de Google Books
     const enriched: BookRecommendation[] = [];
     for (const book of books) {
       const { thumbnail, isbn } = await fetchBookData(book.titre, book.auteur);
       const amazonLink = buildAmazonLink(book.titre, book.auteur, isbn);
       console.log(`[recommend] "${book.titre}" → coverUrl=${thumbnail ?? "null"}, amazonLink=${amazonLink}`);
       enriched.push({ ...book, isbn, coverUrl: thumbnail, amazonLink });
+      await sleep(300); // 300 ms entre chaque appel
     }
 
-    // Prioritise books with a cover; fallback to all if not enough
-    const withCover = enriched.filter((b) => b.coverUrl !== null);
-    const final = (withCover.length >= 5 ? withCover : enriched).slice(0, 5);
+    // On ne garde que les livres confirmés par Google Books (couverture OU ISBN),
+    // pour écarter les titres inventés. Repli sur tous si trop peu de confirmés.
+    const verifies = enriched.filter((b) => b.coverUrl !== null || b.isbn !== null);
+    const final = (verifies.length >= 5 ? verifies : enriched).slice(0, 5);
 
     return NextResponse.json({ recommandations: final });
   } catch (error) {
