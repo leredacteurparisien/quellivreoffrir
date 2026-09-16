@@ -240,7 +240,7 @@ export const quizQuestions: Record<Profil, QuizQuestion[]> = {
         { value: "anniversaire", label: "🎂 Anniversaire" },
         { value: "noël", label: "🎄 Noël" },
         { value: "fête des mères/pères", label: "💐 Fête des mères / pères" },
-        { value: "retraite", label: "🎊 Départ en retraite" },
+        { value: "retraite", label: "🎊 Départ à la retraite" },
         { value: "autre", label: "🎁 Autre occasion" },
       ],
     },
