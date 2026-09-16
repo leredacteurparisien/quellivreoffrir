@@ -30,7 +30,10 @@ function buildPrompt(profil: string, reponses: Record<string, string>): string {
 Voici ses réponses au quiz :
 ${reponsesFormatees}
 
-Propose exactement 7 recommandations de livres parfaitement adaptées.
+Propose exactement 8 recommandations de livres.
+
+CONTRAINTE DE FIABILITÉ (la plus importante) :
+Tu ne dois recommander QUE des livres RÉELS, très connus et largement diffusés en France, que l'on trouve facilement en librairie et sur Amazon.fr. Privilégie les best-sellers, les grands classiques, les prix littéraires et les titres grand public dont tu es absolument certain de l'existence, avec le nom EXACT de l'auteur et le titre EXACT. En cas de doute sur l'existence réelle d'un livre ou l'orthographe de son auteur, NE LE PROPOSE PAS et choisis un titre plus connu à la place. Un livre inventé ou approximatif est une faute grave.
 
 IMPORTANT : réponds UNIQUEMENT avec un tableau JSON brut. Pas de markdown, pas de backticks, pas de texte avant ou après. Commence directement par [ et termine par ].
 
@@ -46,8 +49,7 @@ Format attendu :
 ]
 
 Règles ABSOLUES :
-- Ne recommande QUE des livres réels, publiés et disponibles en France. Vérifie mentalement que chaque livre existe avant de le proposer.
-- Recommande uniquement des livres disponibles en français (traduits si nécessaire).
+- Uniquement des livres réels, publiés, disponibles en français et facilement trouvables sur Amazon.fr.
 - Le prix doit être réaliste et dans le budget indiqué.
 - Pour les sagas, toujours proposer le tome 1 et préciser "Tome 1 d'une saga de X tomes" dans le champ "pourquoi".
 - L'explication doit être chaleureuse, personnalisée et faire référence aux réponses du quiz.
@@ -81,7 +83,7 @@ export async function POST(req: NextRequest) {
 
     const message = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 2000,
+      max_tokens: 3000,
       messages: [{ role: "user", content: prompt }],
     });
 
@@ -107,7 +109,7 @@ export async function POST(req: NextRequest) {
       await sleep(300); // 300 ms entre chaque appel
     }
 
-    // On ne garde que les livres confirmés par Google Books (couverture OU ISBN),
+    // On ne garde que les livres confirmés (couverture OU ISBN trouvés),
     // pour écarter les titres inventés. Repli sur tous si trop peu de confirmés.
     const verifies = enriched.filter((b) => b.coverUrl !== null || b.isbn !== null);
     const final = (verifies.length >= 5 ? verifies : enriched).slice(0, 5);
