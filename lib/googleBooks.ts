@@ -10,11 +10,11 @@ export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// ---- Source principale : Google Books (bon catalogue FR) ----
+// ---- Source principale : Google Books (édition FR uniquement) ----
 async function fetchFromGoogle(titre: string, auteur: string): Promise<BookData | null> {
   const query = encodeURIComponent(`intitle:${titre} inauthor:${auteur}`);
   const keyParam = GOOGLE_BOOKS_KEY ? `&key=${GOOGLE_BOOKS_KEY}` : "";
-  const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=5&country=FR${keyParam}`;
+  const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=5&country=FR&langRestrict=fr${keyParam}`;
 
   try {
     const res = await fetch(url);
@@ -26,7 +26,7 @@ async function fetchFromGoogle(titre: string, auteur: string): Promise<BookData 
     const items = data?.items ?? [];
     if (items.length === 0) return null;
 
-    // On ne garde qu'une édition en français
+    // Langue EXPLICITEMENT française, sinon on rejette.
     const itemFr = items.find(
       (it: { volumeInfo?: { language?: string } }) => it.volumeInfo?.language === "fr"
     );
@@ -38,11 +38,9 @@ async function fetchFromGoogle(titre: string, auteur: string): Promise<BookData 
       identifiers.find((id: { type: string }) => id.type === "ISBN_13")?.identifier ??
       identifiers.find((id: { type: string }) => id.type === "ISBN_10")?.identifier ??
       null;
-
     if (!isbn) return null;
 
     const thumbnail = info.imageLinks?.thumbnail?.replace("http://", "https://") ?? null;
-
     console.log(`[googleBooks] "${titre}" (fr) → isbn=${isbn}, cover=${thumbnail ? "oui" : "non"}`);
     return {
       thumbnail,
@@ -55,7 +53,7 @@ async function fetchFromGoogle(titre: string, auteur: string): Promise<BookData 
   }
 }
 
-// ---- Repli : OpenLibrary (éditions françaises) ----
+// ---- Repli : OpenLibrary (édition FR uniquement, stricte) ----
 async function fetchFromOpenLibrary(titre: string, auteur: string): Promise<BookData | null> {
   const params = new URLSearchParams({
     title: titre,
@@ -71,9 +69,12 @@ async function fetchFromOpenLibrary(titre: string, auteur: string): Promise<Book
     const data = await res.json();
     const docs = data?.docs ?? [];
 
-    const docFr = docs.find(
-      (d: { language?: string[] }) => Array.isArray(d.language) && d.language.includes("fre")
-    );
+    // On exige une langue renseignée ET qui ne contienne QUE du français
+    // (rejet si une autre langue est présente ou si la langue est absente).
+    const docFr = docs.find((d: { language?: string[] }) => {
+      const langs = d.language;
+      return Array.isArray(langs) && langs.length > 0 && langs.every((l) => l === "fre");
+    });
     if (!docFr) return null;
 
     const isbn: string | null =
@@ -85,7 +86,7 @@ async function fetchFromOpenLibrary(titre: string, auteur: string): Promise<Book
       ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg`
       : `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`;
 
-    console.log(`[openLibrary] "${titre}" (fr) → isbn=${isbn}`);
+    console.log(`[openLibrary] "${titre}" (fre) → isbn=${isbn}`);
     return { thumbnail, smallThumbnail: thumbnail, isbn };
   } catch {
     return null;
